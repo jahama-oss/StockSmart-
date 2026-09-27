@@ -146,4 +146,52 @@ st.dataframe(
 st.caption(
     "StockSmart uses machine learning and historical sales data "
     "to support inventory planning and reorder decisions."
+
 )
+# Multi-product inventory overview
+st.divider()
+st.subheader("Inventory Overview")
+
+try:
+    inventory_overview = pd.read_csv("data/inventory_overview.csv")
+
+    total_products = len(inventory_overview)
+    reorder_products = (
+        inventory_overview["Status"] == "REORDER"
+    ).sum()
+    ok_products = (
+        inventory_overview["Status"] == "OK"
+    ).sum()
+
+    overview_col1, overview_col2, overview_col3 = st.columns(3)
+
+    overview_col1.metric(
+        "Products Monitored",
+        total_products
+    )
+
+    overview_col2.metric(
+        "Need Reorder",
+        reorder_products
+    )
+
+    overview_col3.metric(
+        "Stock OK",
+        ok_products
+    )
+
+    st.subheader("Products Requiring Attention")
+
+    reorder_table = inventory_overview[
+        inventory_overview["Status"] == "REORDER"
+    ]
+
+    st.dataframe(
+        reorder_table,
+        width="stretch"
+    )
+
+except FileNotFoundError:
+    st.warning(
+        "Inventory overview has not been generated yet."
+    )
