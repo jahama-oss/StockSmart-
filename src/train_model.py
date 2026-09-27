@@ -57,10 +57,12 @@ predictions = model.predict(X_test)
 # Evaluate model
 mae = mean_absolute_error(y_test, predictions)
 rmse = mean_squared_error(y_test, predictions) ** 0.5
+r2 = model.score(X_test, y_test)
 
 print("\nModel evaluation:")
 print("MAE:", round(mae, 3))
 print("RMSE:", round(rmse, 3))
+print("R2:", round(r2, 3))
 
 # Save trained model
 os.makedirs("models", exist_ok=True)
