@@ -195,3 +195,4 @@ except FileNotFoundError:
     st.warning(
         "Inventory overview has not been generated yet."
     )
+
