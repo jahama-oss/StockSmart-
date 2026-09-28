@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import joblib
 import os
 
@@ -40,7 +41,30 @@ y_test = y.iloc[split_index:]
 
 print("\nTraining records:", len(X_train))
 print("Testing records:", len(X_test))
+# 7-day historical mean baseline
+baseline_predictions = X_test["rolling_7"]
 
+baseline_mae = mean_absolute_error(y_test, baseline_predictions)
+baseline_rmse = mean_squared_error(y_test, baseline_predictions) ** 0.5
+baseline_r2 = r2_score(y_test, baseline_predictions)
+
+print("\n7-Day Historical Mean Baseline:")
+print("MAE:", round(baseline_mae, 3))
+print("RMSE:", round(baseline_rmse, 3))
+print("R2:", round(baseline_r2, 3))
+# Linear Regression model
+linear_model = LinearRegression()
+linear_model.fit(X_train, y_train)
+linear_predictions = linear_model.predict(X_test)
+
+linear_mae = mean_absolute_error(y_test, linear_predictions)
+linear_rmse = mean_squared_error(y_test, linear_predictions) ** 0.5
+linear_r2 = r2_score(y_test, linear_predictions)
+
+print("\nLinear Regression:")
+print("MAE:", round(linear_mae, 3))
+print("RMSE:", round(linear_rmse, 3))
+print("R2:", round(linear_r2, 3))
 # Create Random Forest model
 model = RandomForestRegressor(
     n_estimators=100,
